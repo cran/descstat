@@ -2,60 +2,77 @@
 % Please edit documentation in R/pre_plot.R
 \name{pre_plot}
 \alias{pre_plot}
-\alias{pre_plot.bins_table}
 \alias{pre_plot.freq_table}
 \alias{pre_plot.cont_table}
 \title{Put a tibble in form to plot}
 \usage{
-pre_plot(x, y = NULL, plot = NULL, ...)
+pre_plot(data, f = NULL, plot = NULL, ...)
 
-\method{pre_plot}{bins_table}(x, y = NULL, plot = c("histogram", "freqpoly", "lorenz"), ...)
+\method{pre_plot}{freq_table}(
+  data,
+  f = NULL,
+  plot = c("histogram", "freqpoly", "lorenz", "stacked", "cumulative"),
+  ...
+)
 
-\method{pre_plot}{freq_table}(x, y = NULL, plot = c("banner", "cumulative"), ...)
-
-\method{pre_plot}{cont_table}(x, ...)
+\method{pre_plot}{cont_table}(data, ...)
 }
 \arguments{
-\item{x}{a tibble returned by any of the \code{freq_table}, \code{bins_table}
-or \code{cont_table} function, which should contain the center of the
+\item{data}{a tibble returned by the \code{freq_table} or the
+\code{cont_table} function, which should contain the center of the
 classes (\code{x}) and at least one measure of the frequencies or
-densities (one of \code{f}, \code{n}, \code{p}, \code{d})}
+densities (one of \code{f}, \code{n}, \code{p}, \code{d}),}
 
-\item{y}{mandatory argument if the tibble contains more than one
-frequency or density}
+\item{f}{mandatory argument if the tibble contains more than one
+frequency or density,}
 
-\item{plot}{for object of class \code{bins_table} one of \code{histogram}
-(the default) and \code{freqpoly} : in the first case a tibble is
-returned with columns \code{x}, \code{y}, \code{xend}, \code{yend} and in the
-second case \code{x} and \code{y} ; for object of class \code{freq_table} one
-of \code{banner} (the default) and \code{cumulative} : in the first case
-a tibble is returned with columns \code{x}, \code{y} and in the second
-case \code{x}, \code{y}, \code{xend} and \code{yend}.}
+\item{plot}{for object of class \code{freq_table} one of \code{histogram},
+\code{freqpoly}, \code{stacked}, \code{cumulative} and \code{lorenz} (see the
+details section),}
 
-\item{...}{further arguments}
+\item{...}{further arguments.}
 }
 \value{
 a tibble
 }
 \description{
-Convert a tibble built using \code{freq_table}, \code{bins_table} or
-\code{cont_table} in a shape that make it easy to plot
+Convert a tibble built using \code{freq_table} or \code{cont_table} in a
+shape that makes it easy to plot.
+}
+\details{
+The \code{pre_plot} function returns a tibble containing:
+\itemize{
+\item if \code{plot = histogram}, \code{x}, \code{y} that should be
+passed to \code{geom_polygon},
+\item if \code{plot = freqpoly} \code{x} and \code{y} that should be passed to \code{geom_line},
+\item if \code{plot = stacked} \code{x} and \code{ypos} that should be passed
+respectively to \code{geom_col} and to \code{geom_text} to draw labels on
+the right position,
+\item if \code{plot = cumulative} \code{x}, \code{y}, \code{xend} and \code{yend} that should be passed to
+\code{geom_segment},
+\item if \code{plot = lorenz} for the Lorenz curve, \code{F} and \code{M} for the
+coordinates of the polygons under the Lorenz curve, \code{pts} is
+logical which the defines the subset of points that belongs to the
+Lorenz curve.
+}
 }
 \examples{
+library("dplyr")
 library("ggplot2")
 pad <- padova \%>\%
-       bins_table(price, breaks = c(100, 200, 300, 400, 500, 1000),
-       right = TRUE, cols = "Npd")
-pad \%>\% pre_plot(y = "d") \%>\% ggplot() + geom_polygon(aes(x, y))
-pad \%>\% pre_plot(y = "d", plot = "freqpoly") \%>\%
+       freq_table(price, breaks = c(100, 200, 300, 400, 500, 1000),
+       right = TRUE, f = "Npd")
+pad \%>\% pre_plot(f = "d") \%>\% ggplot() + geom_polygon(aes(x, y))
+pad \%>\% pre_plot(f = "d", plot = "freqpoly") \%>\%
 ggplot() + geom_line(aes(x, y))
 ## A pie chart
 wages \%>\% freq_table(sector, "p", total = FALSE) \%>\%
-  pre_plot("p") \%>\% ggplot(aes(x = 2, y = p, fill = sector)) +
-  geom_col() + geom_text(aes(y = ypos, label = round(p))) +
-  coord_polar(theta = "y")
+  pre_plot("p", plot = "stacked") \%>\% ggplot(aes(x = 2, y = p, fill = sector)) +
+  geom_col() + geom_text(aes(y = ypos, label = sector)) +
+  coord_polar(theta = "y") + theme_void() + guides(fill = FALSE)
 
 }
 \author{
 Yves Croissant
 }
+\keyword{dplot}
