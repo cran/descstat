@@ -20,7 +20,7 @@ a tibble containing
 }
 }
 \source{
-\href{https://www.sciencedirect.com/science/article/pii/S2352340915003224}{Data in Brief}'s website.
+Data in Brief's website, \doi{10.1016/j.dib.2015.11.027}.
 }
 \description{
 This data set documents characteristics (including the prices) of a

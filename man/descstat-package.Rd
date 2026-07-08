@@ -2,6 +2,7 @@
 % Please edit documentation in R/descstat.R
 \docType{package}
 \name{descstat-package}
+\alias{descstat}
 \alias{descstat-package}
 \title{descstat: a toolbox for descriptive statistics}
 \description{
@@ -10,19 +11,22 @@ series for a sample in tables (frequency table for one series,
 contingency tables for two series), ploting this distribution and
 computing some statistics that summarise it. \strong{descstat} provides
 a complete toolbox to perform this tasks. It has been writen using
-some packages of the tidyverse (especially \strong{dplyr}, \strong{tidyr} and
-\strong{purrr}) and its usage follow the tidyverse conventions,
-especially the selection of series using their unquoted names and
-the use of the pipe operator and of tibbles.
+the tidyverse conventions, especially the selection of series using
+their unquoted names and the use of the pipe operator.
 }
 \section{The bin class}{
 
 
-In a frequency (or contingency table), continuous numerical series
-are presented as bins. Moreover, for some surveys, the individual
-values are not known, but only the fact that these values belongs to
-a bin. Therefore, it is crucial to be able to work easily with
-bins, ie:
+The \code{bin} function takes a series as input that can either:
+\itemize{
+\item a continouis variable,
+\item a categorical series,
+\item an integer series,
+\item a continuous bin series
+}
+
+and returns an object of class \code{bin}. The \code{bin} function is
+particularly usefull for continuous series. It enables:
 \itemize{
 \item creating bins from numerical values, which is performed by the
 \code{base::cut} function which turns a numerical series to a bin,
@@ -33,11 +37,9 @@ whatever other value of the bin,
 \verb{[0,10)}, \verb{[10, 20)}, \verb{[20,30)}, \verb{[30,Inf)} to \verb{[0,20)}, \verb{[20,Inf)}
 }
 
-these latter two tasks are performed using the new \code{bin} class
-provided by this package and the accompanying \code{as_numeric} function
-for the coercion to numeric and the \code{cut} method for bins
-merging. Especially, coercing bins to their center values is the
-basis of the computation of descripting statistics for bins.
+The last task is performed using the \code{as_numeric}
+function. Coercing bins to their center values is the basis of the
+computation of descripting statistics for bins.
 }
 
 \section{Frequency and contingency tables}{
@@ -61,11 +63,11 @@ conditional distributions,
 \section{Plotting the distribution}{
 
 
-A \code{pre_plot} function is provided to put the tibble in form in
-order to use classic plots for univariate or bivariate
-distributions. This includes histogram, frequency plot, pie chart,
-cummulative plot and Lorenz curve. The final plot can then be
-obtained using some geoms of \strong{ggplot2}.
+\strong{descstat} uses the \strong{tinyplot} package to provide classic plots
+for univariate or bivariate distributions. This includes histogram,
+frequency plot, pie chart, cummulative plot and Lorenz curve. More
+precisely, \code{type_dsc_###} functions are provided and the relevant
+plot is obtained using \verb{tinyplot(..., type = type_dsc_###)}.
 }
 
 \section{Descriptive statistics}{
@@ -87,4 +89,15 @@ and a method for \code{freq_table} objects.
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://www.r-project.org}
+}
+
+}
+\author{
+\strong{Maintainer}: Yves Croissant \email{yves.croissant@univ-reunion.fr}
+
+}
 \keyword{package}

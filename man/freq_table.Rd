@@ -9,17 +9,21 @@ freq_table(
   x,
   f = "n",
   vals = NULL,
-  weights = NULL,
-  total = FALSE,
-  max = NULL,
   breaks = NULL,
-  right = NULL,
+  max = NULL,
+  levels = NULL,
+  right = TRUE,
+  weights = NULL,
   xfirst = NULL,
   xlast = NULL,
   wlast = NULL,
+  total = FALSE,
   freq = NULL,
   mass = NULL,
-  center = NULL
+  center = NULL,
+  numeric = TRUE,
+  print = FALSE,
+  x_is_char = FALSE
 )
 }
 \arguments{
@@ -37,22 +41,26 @@ the variable that should be returned; \code{x} for the center of the
 class, \code{l} and \code{u} for the lower and upper limit of the class,
 \code{a} for the range,}
 
-\item{weights}{a series that contain the weights that enable the
-sample to mimic the population,}
-
-\item{total}{a logical indicating whether the total should be
-returned,}
+\item{breaks}{a numerical vector of class limits,}
 
 \item{max}{if the series is a discrete numerical value, this
 argument indicates that all the values greater than \code{max}
 should be merged in the same modality,}
 
-\item{breaks}{a numerical vector of class limits,}
+\item{levels}{a character or a list indicating the levels in case
+of a categorical input}
 
-\item{right}{a logical indicating whether classes should be closed
-(\code{right = TRUE}) or open (\code{right = FALSE}) on the right,}
+\item{right}{a logical indicating whether the interval should be
+closed (\code{right = TRUE}, the default) or open (\code{right = FALSE})
+on the right in case of a continuous numerical series,}
+
+\item{weights}{a series that contain the weights that enable the
+sample to mimic the population,}
 
 \item{xfirst, xlast, wlast}{see \code{\link[=as_numeric]{as_numeric()}},}
+
+\item{total}{a logical indicating whether the total should be
+returned,}
 
 \item{freq}{a series that contains the frequencies (only relevant
 if \code{data} is already a frequency table),}
@@ -62,50 +70,59 @@ relevant if \code{data} is already a frequency table),}
 
 \item{center}{a series that contains the center of the class of the
 variable (only relevant if \code{data} is already a frequency
-table).}
+table),}
+
+\item{numeric}{a boolean, if true, the numerical value is provided
+is the series is an integer}
+
+\item{print}{a boolean, \code{TRUE} if a printable version of the table
+is required}
+
+\item{x_is_char}{for internal use only}
 }
 \value{
-a tibble containing the specified values of \code{vals} and
-\code{f}.
+a tibble containing the specified values of \code{vals} and \code{f}.
 }
 \description{
 Compute the frequency table of a categorical or a numerical series.
 }
 \examples{
 # in table padova, price is a numeric variable, a vector of breaks should be provided
-library("dplyr")
-padova \%>\% freq_table(price,
+padova |> freq_table(price,
                       breaks = c(50, 100, 150, 200, 250, 300, 350, 400),
                       right = TRUE)
 # return relative frequencies and densities, and the center value
 # of the series and the width of the bin
-padova \%>\% freq_table(price,
+padova |> freq_table(price,
                       breaks = c(50, 100, 150, 200, 250, 300, 350, 400),
                       right = TRUE, f = "fd", vals = "xa")
 # in table wages, wage is a factor that represents the classes
-wages \%>\% freq_table(wage, "d")
+wages |> freq_table(wage, "d")
 # a breaks argument is provided to reduce the number of classes
-wages \%>\% freq_table(wage, breaks = c(10, 20, 30, 40, 50))
+wages |> freq_table(wage, breaks = c(10, 20, 30, 40, 50))
 # a total argument add a total to the frequency table
-wages \%>\% freq_table(wage, breaks = c(10, 20, 30, 40, 50), total = TRUE)
+wages |> freq_table(wage, breaks = c(10, 20, 30, 40, 50), total = TRUE)
 # ìncome is already a frequency table, the freq argument
 # is mandatory
-income \%>\% freq_table(inc_class, freq = number)
-# the mass argument can be indicated if on column contains the
+income |> freq_table(inc_class, freq = number)
+# the mass argument can be indicated if one column contains the
 # mass of the series in each bin. In this case, the center of the
 # class are exactly the mean of the series in each bin
-income \%>\% freq_table(inc_class, freq = number, mass = tot_inc)
+income |> freq_table(inc_class, freq = number, mass = tot_inc)
+# reducing the number of classes
+income |> freq_table(inc_class, freq = number, mass = tot_inc,
+                     breaks = c(10, 20, 50, 100, 1000))
 # rgp contains a children series which indicates the number of
 # children of the households
-rgp \%>\% freq_table(children)
+rgp |> freq_table(children)
 # a max argument can be indicated to merge the unusual high
 # values of number of childre
-rgp \%>\% freq_table(children, max = 4)
+rgp |> freq_table(children, max = 4)
 # employment is a non random survey, there is a weights series
 # that can be used to compute the frequency table according to the
 # sum of weights and not to counts
-employment \%>\% freq_table(education)
-employment \%>\% freq_table(education, weights = weights)
+employment |> freq_table(education)
+employment |> freq_table(education, weights = weights)
 }
 \author{
 Yves Croissant

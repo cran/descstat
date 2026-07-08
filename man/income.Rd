@@ -14,7 +14,7 @@ a tibble containing :
 }
 \source{
 Impot sur le revenu par commune (IRCOM)
-\href{https://www.impots.gouv.fr/portail/statistiques}{DGI}'s
+\href{https://www.impots.gouv.fr/statistiques}{DGI}'s
 website.
 }
 \description{

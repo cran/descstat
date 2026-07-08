@@ -5,6 +5,7 @@
 \alias{joint}
 \alias{conditional}
 \alias{marginal}
+\alias{wide}
 \title{Contingency table}
 \usage{
 cont_table(
@@ -19,14 +20,24 @@ cont_table(
   wlast1 = NULL,
   xfirst2 = NULL,
   xlast2 = NULL,
-  wlast2 = NULL
+  wlast2 = NULL,
+  breaks1 = NULL,
+  breaks2 = NULL,
+  max1 = NULL,
+  max2 = NULL,
+  right1 = NULL,
+  right2 = NULL,
+  levels1 = NULL,
+  levels2 = NULL
 )
 
 joint(data)
 
-conditional(data, x = NULL)
+conditional(data, x = NULL, x_is_char = FALSE)
 
-marginal(data, x = NULL, f = "f", vals = NULL)
+marginal(data, x = NULL, f = "f", vals = NULL, x_is_char = FALSE)
+
+wide(x)
 }
 \arguments{
 \item{data}{a tibble,}
@@ -46,11 +57,15 @@ contingency table),}
 
 \item{xfirst1, xfirst2, xlast1, xlast2, wlast1, wlast2}{see \code{\link[=as_numeric]{as_numeric()}},}
 
-\item{x}{the series on which the operation should be computed,}
+\item{breaks1, breaks2, max1, max2, levels1, levels2, right1, right2}{see \code{\link[=bin]{bin()}}}
 
-\item{f}{see \code{\link[=freq_table]{freq_table()}},}
+\item{x}{the series for which the marginal or the conditional
+distribution should be computed, or a \code{cont_table} object for
+the \code{wide} function}
 
-\item{vals}{see \code{\link[=freq_table]{freq_table()}},}
+\item{x_is_char}{for internal use only}
+
+\item{f, vals}{see \code{\link[=freq_table]{freq_table()}},}
 }
 \value{
 a tibble
@@ -73,16 +88,16 @@ The \code{conditional} and \code{joint} functions return a \code{cont_table}
 object, as the \code{marginal} function returns a \code{freq_table} object.
 }
 \examples{
-library("dplyr")
 # get a contingency table containing education and sex
 cont_table(employment, education, sex)
 # instead of counts, sum the weights
 cont_table(employment, education, sex, weights = weights)
 # get the joint distribution and the conditional and marginal
 # distribution of sex
-cont_table(employment, education, sex) \%>\% joint
-cont_table(employment, education, sex) \%>\% marginal(sex)
-cont_table(employment, education, sex) \%>\% conditional(sex)
+cont_table(employment, education, sex) |> joint()
+cont_table(employment, education, sex) |> marginal(sex)
+cont_table(employment, education, sex) |> conditional(sex)
+cont_table(employment, education, sex) |> joint() |> wide()
 }
 \author{
 Yves Croissant

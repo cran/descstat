@@ -76,7 +76,7 @@ NULL
 #' - price : price of the house in thousands of euros.
 #'
 #' @source
-#' [Data in Brief](https://www.sciencedirect.com/science/article/pii/S2352340915003224)'s website.
+#' Data in Brief's website, \doi{10.1016/j.dib.2015.11.027}.
 #' @references
 #'  Bonifaci P, Copiello S
 #'  (2015). "Real estate market and building energy performance: Data for a mass appraisal approach."
@@ -120,7 +120,7 @@ NULL
 #' - income: mass of income in the bin.
 #' 
 #' @source Impot sur le revenu par commune (IRCOM)
-#'     [DGI](https://www.impots.gouv.fr/portail/statistiques)'s
+#'     [DGI](https://www.impots.gouv.fr/statistiques)'s
 #'     website.
 #'
 NULL
